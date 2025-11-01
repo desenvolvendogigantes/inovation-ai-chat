@@ -1,0 +1,93 @@
+# config/llm_providers.yaml
+# Configuração de Agentes LLM para o Sistema de Debate
+# Estrutura conforme especificado no PDF
+
+agents:
+  # Agente A - Pode ser OpenAI
+  gpt-4o:
+    id: "gpt-4o"
+    name: "GPT-4o"
+    provider: "openai"
+    model: "gpt-4o"
+    temperature: 0.7
+    max_tokens: 500
+    system_prompt: "You are a helpful and knowledgeable AI assistant. Provide clear, concise responses and engage in meaningful debate."
+    api_key: "${OPENAI_API_KEY}"
+
+  # Agente B - Pode ser Gemini (diferente do Agente A conforme PDF)
+  gemini-1.5:
+    id: "gemini-1.5" 
+    name: "Gemini 1.5 Pro"
+    provider: "gemini"
+    model: "gemini-1.5-pro"
+    temperature: 0.7
+    max_tokens: 500
+    system_prompt: "You are a creative and insightful AI assistant. Offer unique perspectives and creative solutions in debates."
+    api_key: "${GEMINI_API_KEY}"
+
+  # Agente Claude (mencionado no PDF como opção)
+  claude-3-sonnet:
+    id: "claude-3-sonnet"
+    name: "Claude 3 Sonnet"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    temperature: 0.7
+    max_tokens: 500
+    system_prompt: "You are a thoughtful and articulate AI assistant. Provide well-reasoned arguments and maintain coherent discourse."
+    api_key: "${ANTHROPIC_API_KEY}"
+
+  # Agentes Mock para quando não há chaves (OBRIGATÓRIO no PDF)
+  mock-a:
+    id: "mock-a"
+    name: "Mock Agent A"
+    provider: "mock"
+    model: "mock"
+    temperature: 0.7
+    max_tokens: 500
+    system_prompt: "You are Mock Agent A. Always respond with creative ideas and innovative perspectives. Vary your responses to simulate real conversation."
+    api_key: ""
+
+  mock-b:
+    id: "mock-b"
+    name: "Mock Agent B"
+    provider: "mock"
+    model: "mock"
+    temperature: 0.7
+    max_tokens: 500
+    system_prompt: "You are Mock Agent B. Always respond with analytical insights and critical thinking. Provide logical arguments and counter-points."
+    api_key: ""
+
+# Configurações padrão para debates
+debate_settings:
+  max_rounds: 6
+  max_duration: 90
+  turn_timeout: 15
+  default_temperature: 0.7
+  default_max_tokens: 500
+
+# Provedores configurados (para referência)
+providers:
+  openai:
+    base_url: "https://api.openai.com/v1"
+    api_key: "${OPENAI_API_KEY}"
+    required: false
+
+  gemini:
+    base_url: "https://generativelanguage.googleapis.com/v1"
+    api_key: "${GEMINI_API_KEY}"
+    required: false
+
+  anthropic:
+    base_url: "https://api.anthropic.com/v1"
+    api_key: "${ANTHROPIC_API_KEY}"
+    required: false
+
+  ollama:
+    base_url: "${OLLAMA_BASE_URL:-http://localhost:11434}"
+    api_key: ""
+    required: false
+
+  mock:
+    base_url: ""
+    api_key: ""
+    required: false

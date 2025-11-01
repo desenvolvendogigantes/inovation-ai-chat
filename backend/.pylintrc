@@ -1,0 +1,8 @@
+[MASTER]
+extension-pkg-whitelist=pydantic
+
+[TYPECHECK]
+generated-members=pydantic.*
+
+[MESSAGES CONTROL]
+disable=import-error, no-self-argument, missing-module-docstring, missing-class-docstring, missing-function-docstring
