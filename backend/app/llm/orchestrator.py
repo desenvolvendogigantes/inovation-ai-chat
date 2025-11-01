@@ -151,7 +151,7 @@ class LLMOrchestrator:
             }
 
     async def _call_mock_llm(self, agent: Dict[str, Any], prompt: str) -> Dict[str, Any]:
-        await asyncio.sleep(1)  # Simular latência
+        await asyncio.sleep(1)
         
         responses = [
             f"Como {agent['name']}, analisando '{prompt}', vejo oportunidades interessantes.",
@@ -180,7 +180,6 @@ class LLMOrchestrator:
         elif provider == "ollama" and "ollama" in self.providers:
             return await self._call_ollama(agent, prompt, context)
         else:
-            # Fallback para mock se provider não disponível
             return await self._call_mock_llm(agent, prompt)
 
     async def _call_openai(self, agent: Dict[str, Any], prompt: str, context: List[str] = None) -> Dict[str, Any]:
@@ -188,9 +187,8 @@ class LLMOrchestrator:
             {"role": "system", "content": agent["system_prompt"]}
         ]
         
-        # Adicionar contexto da conversa
         if context:
-            for msg in context[-4:]:  # Manter contexto curto
+            for msg in context[-4:]: 
                 messages.append({"role": "user", "content": msg})
         
         messages.append({"role": "user", "content": prompt})
@@ -221,7 +219,7 @@ class LLMOrchestrator:
         
         return {
             "content": response.text,
-            "tokens_used": 0  # Gemini não retorna contagem facilmente
+            "tokens_used": 0
         }
 
     async def _call_anthropic(self, agent: Dict[str, Any], prompt: str, context: List[str] = None) -> Dict[str, Any]:
@@ -469,7 +467,6 @@ class LLMOrchestrator:
         ]
 
     def get_stats(self) -> Dict[str, Any]:
-        # Calcular latências médias
         avg_latency = {}
         for provider, latencies in self.stats["avg_latency_by_provider"].items():
             avg_latency[provider] = sum(latencies) / len(latencies) if latencies else 0

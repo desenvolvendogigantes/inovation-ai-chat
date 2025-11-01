@@ -377,7 +377,6 @@ export class WebSocketManager {
   }
 }
 
-// HOOK CORRIGIDO: 1 instância, sem loop
 export const useWebSocket = (
   config: ChatConfig,
   eventHandlers: WebSocketEventHandlers
@@ -391,7 +390,7 @@ export const useWebSocket = (
     } else {
       managerRef.current['config'] = config;
     }
-  }, [config]); // SEM eventHandlers nas dependências
+  }, [config]);
 
   useEffect(() => {
     if (managerRef.current) {

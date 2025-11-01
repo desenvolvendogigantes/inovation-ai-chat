@@ -48,7 +48,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Salas disponíveis
   const availableRooms = config.availableRooms || [
     { id: 'general', name: 'Geral', icon: '💬', description: 'Conversas gerais' },
     { id: 'support', name: 'Suporte', icon: '🛟', description: 'Ajuda e suporte' },
@@ -56,12 +55,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     { id: 'tech', name: 'Tecnologia', icon: '⚡', description: 'Assuntos técnicos' }
   ];
 
-  // Scroll para baixo quando novas mensagens chegarem
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Ajustar altura do textarea automaticamente
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -69,27 +66,23 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   }, [inputMessage]);
 
-  // Persistência no localStorage
   useEffect(() => {
     if (messages.length > 0) {
       localStorage.setItem(`chat_messages_${config.roomId}`, JSON.stringify(messages));
     }
   }, [messages, config.roomId]);
 
-  // Carregar mensagens do localStorage ao montar
   useEffect(() => {
     const saved = localStorage.getItem(`chat_messages_${config.roomId}`);
     if (saved) {
       try {
         const parsedMessages = JSON.parse(saved);
-        // Note: Em produção, você pode querer mesclar com mensagens do servidor
       } catch (error) {
         console.error('Erro ao carregar mensagens do localStorage:', error);
       }
     }
   }, [config.roomId]);
 
-  // Navegação por teclado
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isMinimized) return;
@@ -106,7 +99,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           break;
         case 'ArrowUp':
         case 'ArrowDown':
-          // Navegação entre mensagens poderia ser implementada aqui
           break;
       }
     };
@@ -130,10 +122,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
       if (e.shiftKey) {
-        // Shift+Enter - permitir nova linha
         return;
       } else {
-        // Enter sem Shift - enviar mensagem
         e.preventDefault();
         handleSendMessage();
       }
@@ -151,7 +141,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       onTypingIndicator(true);
     }
 
-    // Reset typing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
@@ -215,7 +204,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     return null;
   };
 
-  // Fechar dropdowns ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -233,7 +221,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showRoomSelector, showLLMControls]);
 
-  // Se estiver minimizado, mostrar apenas o header
   if (isMinimized) {
     return (
       <div className={`chat-window minimized ${config.theme || 'light'}`}>
@@ -287,7 +274,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       aria-label="Janela de chat"
       aria-modal="true"
     >
-      {/* Header */}
       <div className="chat-header">
         <div className="header-content">
           <div className="header-left">
@@ -359,7 +345,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </div>
         </div>
 
-        {/* Room Selector */}
         {showRoomSelector && (
           <div 
             className="rooms-dropdown"
@@ -398,7 +383,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         )}
       </div>
 
-      {/* Debate Status */}
       {debateStatus.isActive && (
         <div 
           className="debate-status-bar"
@@ -416,7 +400,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         </div>
       )}
 
-      {/* Área de Mensagens */}
       <div 
         className="messages-container" 
         ref={messagesContainerRef}
@@ -477,7 +460,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         <div ref={messagesEndRef} className="messages-anchor" aria-hidden="true" />
       </div>
 
-      {/* Indicador de digitação */}
       {typingUsers.length > 0 && (
         <div 
           className="typing-indicator"
@@ -494,7 +476,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         </div>
       )}
 
-      {/* Controles LLM */}
       {showLLMControls && (
         <div className="llm-debate-section">
           <LLMDebateControls
@@ -507,7 +488,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         </div>
       )}
 
-      {/* Input Area */}
       <div className="input-container">
         <div className="input-wrapper">
           <textarea
@@ -542,7 +522,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   );
 };
 
-// Componente auxiliar para texto apenas para screen readers
 const SrOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="sr-only">{children}</div>
 );

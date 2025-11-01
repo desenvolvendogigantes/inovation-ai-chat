@@ -1,4 +1,3 @@
-// Tipos principais conforme especificado no PDF
 export interface User {
   id: string;
   name: string;
@@ -43,8 +42,8 @@ export interface LLMAgent {
 
 export interface DebateConfig {
   topic: string;
-  agentA: string; // agent ID
-  agentB: string; // agent ID
+  agentA: string;
+  agentB: string;
   maxRounds?: number;
   maxDuration?: number;
 }
@@ -91,7 +90,6 @@ export interface DebateStatus {
   currentRound?: number;
 }
 
-// Tipos para o widget
 export interface WidgetConfig {
   serverUrl: string;
   roomId: string;
@@ -100,7 +98,6 @@ export interface WidgetConfig {
   availableRooms?: Room[];
 }
 
-// Tipos para mensagens específicas conforme PDF
 export interface PresenceMessage extends ChatMessage {
   type: 'presence';
   meta: {

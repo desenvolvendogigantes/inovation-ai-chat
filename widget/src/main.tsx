@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import ChatWidget from './components/ChatBubble'
-
-// Tipos globais
 declare global {
   interface Window {
     InovationAIChatWidget: any
@@ -30,7 +28,6 @@ class InovationAIChatWidget {
   }
 
   private initializeWidget() {
-    // Verificar se já existe
     if (document.getElementById('inovation-ai-chat-widget')) {
       console.warn('Widget já está inicializado');
       return;
@@ -48,10 +45,8 @@ class InovationAIChatWidget {
   }
 }
 
-// Expor globalmente
 window.InovationAIChatWidget = InovationAIChatWidget
 
-// Auto-inicialização em desenvolvimento
 if (import.meta.env.DEV) {
   document.addEventListener('DOMContentLoaded', () => {
     new InovationAIChatWidget({

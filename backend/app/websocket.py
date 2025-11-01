@@ -8,10 +8,9 @@ from .redis_client import redis_client
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: Dict[str, Dict[str, WebSocket]] = {}  # room_id -> {user_id: websocket}
+        self.active_connections: Dict[str, Dict[str, WebSocket]] = {}
     
     async def connect(self, websocket: WebSocket, user: Dict[str, Any], room_id: str):
-        """Conectar usuário à sala - EXATO conforme PDF"""
         await websocket.accept()
         
         # Inicializar sala se não existir
@@ -24,7 +23,7 @@ class ConnectionManager:
         # Adicionar à presença no Redis - EXATO ws:rooms:{roomId}:online
         await redis_client.add_user_to_room(room_id, user)
         
-        # Enviar histórico ao conectar - EXATO como no PDF
+        # Enviar histórico ao conectar
         await self._send_room_history(websocket, room_id)
         
         # Broadcast presença atualizada
@@ -44,11 +43,10 @@ class ConnectionManager:
         return user["id"]
     
     async def disconnect(self, user_id: str, user: Dict[str, Any], room_id: str):
-        """Desconectar usuário - EXATO conforme PDF"""
         if room_id in self.active_connections and user_id in self.active_connections[room_id]:
             del self.active_connections[room_id][user_id]
         
-        # Remover da presença no Redis - EXATO
+        # Remover da presença no Redis
         await redis_client.remove_user_from_room(room_id, user)
         
         # Limpar indicador de digitação
@@ -69,7 +67,6 @@ class ConnectionManager:
         await self.broadcast_to_room(room_id, system_message)
     
     async def handle_websocket_connection(self, websocket: WebSocket, room_id: str, user: Dict[str, Any]):
-        """Manipular ciclo de vida completo da conexão WebSocket"""
         user_id = await self.connect(websocket, user, room_id)
         
         try:
@@ -84,7 +81,6 @@ class ConnectionManager:
             await self.disconnect(user_id, user, room_id)
     
     async def _handle_client_message(self, user: Dict[str, Any], room_id: str, data: str):
-        """Processar mensagem do cliente - EXATO protocolo do PDF"""
         try:
             message_data = json.loads(data)
             
@@ -97,7 +93,7 @@ class ConnectionManager:
             content = message_data.get("content", "")
             client_id = message_data.get("client_id")
             
-            # Rate limiting - EXATO 5 msgs/5s conforme PDF
+            # Rate limiting
             if not await redis_client.check_rate_limit(room_id, user["id"]):
                 await self._send_error(room_id, user["id"], "rate_limited")
                 return
@@ -116,8 +112,7 @@ class ConnectionManager:
             await self._send_error(room_id, user["id"], "Internal server error")
     
     async def _handle_chat_message(self, user: Dict[str, Any], room_id: str, content: str, client_id: Optional[str] = None):
-        """Processar mensagem de chat - EXATO conforme PDF"""
-        # Validar tamanho - EXATO 1000 chars conforme PDF
+        # Validar tamanho
         if len(content) > 1000:
             await self._send_error(room_id, user["id"], "Message too long (max 1000 chars)")
             return
@@ -125,7 +120,7 @@ class ConnectionManager:
         # Sanitizar conteúdo - prevenir XSS
         sanitized_content = self._sanitize_content(content)
         
-        # Criar mensagem no formato EXATO do PDF
+        # Criar mensagem
         message = {
             "type": "message",
             "room": room_id,
@@ -146,7 +141,6 @@ class ConnectionManager:
         await redis_client.clear_typing_indicator(room_id, user["id"])
     
     async def _handle_typing_indicator(self, user: Dict[str, Any], room_id: str):
-        """Processar indicador de digitação - EXATO TTL=5s conforme PDF"""
         # Definir indicador no Redis - EXATO ws:rooms:{roomId}:typing:{userId}
         await redis_client.set_typing_indicator(room_id, user["id"], user["name"])
         
@@ -166,7 +160,6 @@ class ConnectionManager:
         await self.broadcast_to_room(room_id, typing_message)
     
     async def _send_room_history(self, websocket: WebSocket, room_id: str):
-        """Enviar histórico ao conectar - EXATO últimas 50 mensagens conforme PDF"""
         history = await redis_client.get_room_history(room_id)
         for message in history:
             try:
@@ -175,7 +168,6 @@ class ConnectionManager:
                 break  # Cliente desconectou
     
     async def broadcast_presence(self, room_id: str):
-        """Broadcast presença - EXATO type=presence conforme PDF"""
         online_users = await redis_client.get_online_users(room_id)
         online_count = await redis_client.get_online_count(room_id)
         
@@ -194,7 +186,6 @@ class ConnectionManager:
         await self.broadcast_to_room(room_id, presence_message)
     
     async def broadcast_to_room(self, room_id: str, message: Dict[str, Any]):
-        """Broadcast para todos na sala (local + Redis Pub/Sub)"""
         # Enviar para conexões locais
         if room_id in self.active_connections:
             disconnected = []
@@ -210,7 +201,6 @@ class ConnectionManager:
                     del self.active_connections[room_id][user_id]
     
     async def _send_error(self, room_id: str, user_id: str, error_code: str):
-        """Enviar mensagem de erro - EXATO type=error conforme PDF"""
         error_messages = {
             "rate_limited": "Rate limit exceeded. Please wait before sending more messages.",
             "Invalid JSON": "Invalid JSON format",
@@ -238,7 +228,6 @@ class ConnectionManager:
                 pass  # Cliente já desconectou
     
     def _sanitize_content(self, content: str) -> str:
-        """Sanitizar conteúdo para prevenir XSS - EXATO conforme PDF"""
         if not content:
             return content
         
@@ -253,7 +242,6 @@ class ConnectionManager:
         return sanitized
     
     async def get_room_stats(self, room_id: str) -> Dict[str, Any]:
-        """Obter estatísticas da sala"""
         online_count = await redis_client.get_online_count(room_id) if redis_client.connected else 0
         local_count = len(self.active_connections.get(room_id, {}))
         

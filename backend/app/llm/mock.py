@@ -27,22 +27,17 @@ class MockLLM:
         ]
     
     async def generate_response(self, agent: LLMAgent, message: str, conversation_history: List[dict]) -> LLMResponse:
-        """Gera uma resposta mock para demonstração"""
         
-        # Simular tempo de processamento
         await asyncio.sleep(random.uniform(1.0, 3.0))
         
-        # Extrair tópico da mensagem ou usar padrão
         topic = self._extract_topic(message) or "este tópico"
         
-        # Escolher resposta aleatória
-        if random.random() < 0.7:  # 70% chance de resposta normal
+        if random.random() < 0.7:  
             template = random.choice(self.responses)
             content = template.format(topic=topic)
-        else:  # 30% chance de fazer pergunta
+        else:
             content = f"{random.choice(self.responses).format(topic=topic)} {random.choice(self.questions)}"
         
-        # Adicionar variação do agente
         content = f"{agent.name}: {content}"
         
         return LLMResponse(
@@ -53,7 +48,6 @@ class MockLLM:
         )
     
     def _extract_topic(self, message: str) -> str:
-        """Extrai palavras-chave da mensagem para personalizar a resposta"""
         keywords = [
             "inteligência artificial", "IA", "tecnologia", "educação", 
             "saúde", "negócios", "futuro", "inovação", "sociedade",

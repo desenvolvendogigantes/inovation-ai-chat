@@ -147,7 +147,6 @@
   }
 }
 
-/* Estados de notificação */
 .chat-bubble.has-notifications {
   animation: gentlePulse 3s ease-in-out infinite;
 }
@@ -167,7 +166,6 @@
   }
 }
 
-/* Tema escuro */
 .chat-widget.dark .chat-bubble {
   background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
   box-shadow: 
@@ -190,7 +188,6 @@
     0 0 0 2px rgba(30, 30, 30, 0.9);
 }
 
-/* Modo glassmorphism para temas auto */
 @media (prefers-color-scheme: dark) {
   .chat-widget.auto .chat-bubble {
     background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(79, 70, 229, 0.9) 100%);
@@ -199,7 +196,6 @@
   }
 }
 
-/* Animação de entrada */
 @keyframes bubbleEntrance {
   0% {
     opacity: 0;
@@ -218,7 +214,6 @@
   animation: bubbleEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Estados de interação para acessibilidade */
 .chat-bubble:focus:not(:focus-visible) {
   box-shadow: 
     0 12px 40px rgba(139, 92, 246, 0.25),
@@ -227,7 +222,6 @@
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .chat-widget {
     bottom: 16px;
@@ -253,7 +247,6 @@
   }
 }
 
-/* Acessibilidade - reduzir movimento */
 @media (prefers-reduced-motion: reduce) {
   .chat-bubble {
     animation: none;
@@ -277,7 +270,6 @@
   }
 }
 
-/* Alto contraste */
 @media (prefers-contrast: high) {
   .chat-bubble {
     border: 2px solid #8B5CF6;
@@ -296,7 +288,6 @@
   }
 }
 
-/* Suporte para touch devices */
 @media (hover: none) and (pointer: coarse) {
   .chat-bubble:hover {
     transform: none;
@@ -311,9 +302,7 @@
   }
 }
 
-/* Indicador de estado para screen readers */
 .chat-bubble[aria-expanded="true"] {
-  /* Estilo adicional quando expandido se necessário */
 }
 
 .chat-bubble .sr-only {

@@ -22,14 +22,13 @@ from .llm.orchestrator import LLMOrchestrator
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Modelos de dados CONFORME PDF
 class User(BaseModel):
     id: str
     name: str
     avatar: Optional[str] = None
 
 class WebSocketMessage(BaseModel):
-    type: str  # message | presence | typing | system | error
+    type: str
     room: str
     user: User
     content: Optional[str] = None
@@ -59,7 +58,6 @@ class LoginRequest(BaseModel):
     name: str
     displayName: Optional[str] = None
 
-# Storage Manager CONFORME PDF
 class StorageManager:
     def __init__(self):
         self.redis = redis_client
@@ -97,7 +95,6 @@ class StorageManager:
     async def get_rate_limit_info(self, user_id: str, room_id: str) -> Dict[str, Any]:
         return await self.redis.get_rate_limit_info(room_id, user_id)
 
-# Gerenciador de conexões WebSocket CONFORME PDF
 class ConnectionManager:
     def __init__(self, storage: StorageManager):
         self.storage = storage
@@ -108,20 +105,16 @@ class ConnectionManager:
         await websocket.accept()
         self.active_connections[user_id] = websocket
         
-        # Adicionar à presença CONFORME PDF
         await self.storage.add_user_to_presence(room_id, user_id, {"name": user_name})
         
-        # Broadcast presença atualizada
         await self.broadcast_presence(room_id)
     
     async def disconnect(self, user_id: str, room_id: str):
         if user_id in self.active_connections:
             del self.active_connections[user_id]
         
-        # Remover da presença CONFORME PDF
         await self.storage.remove_user_from_presence(room_id, user_id)
         
-        # Broadcast presença atualizada
         await self.broadcast_presence(room_id)
     
     async def send_personal_message(self, message: dict, user_id: str):
@@ -132,14 +125,12 @@ class ConnectionManager:
                 logger.error(f"Erro ao enviar mensagem para {user_id}: {e}")
     
     async def broadcast_to_room(self, message: dict, room_id: str):
-        # Publicar no Redis Pub/Sub CONFORME PDF
         await self.storage.publish_message(room_id, message)
     
     async def broadcast_presence(self, room_id: str):
         online_users = await self.storage.get_online_users(room_id)
         online_count = len(online_users)
         
-        # FORMATO EXATO CONFORME PDF
         presence_message = {
             "type": "presence",
             "room": room_id,
@@ -157,7 +148,6 @@ class ConnectionManager:
     async def broadcast_typing(self, room_id: str, user_data: User):
         typing_users = await self.storage.get_typing_users(room_id)
         
-        # FORMATO EXATO CONFORME PDF
         typing_message = {
             "type": "typing",
             "room": room_id,
@@ -169,16 +159,13 @@ class ConnectionManager:
         }
         await self.broadcast_to_room(typing_message, room_id)
 
-# Função de sanitização CONFORME PDF
 def sanitize_content(content: str) -> str:
     if not content:
         return content
     
-    # Remover scripts e event handlers
     content = re.sub(r'<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>', '', content, flags=re.IGNORECASE)
     content = re.sub(r'on\w+=\s*["\'][^"\']*["\']', '', content, flags=re.IGNORECASE)
     
-    # Escapar caracteres HTML
     content = (content
               .replace('&', '&amp;')
               .replace('<', '&lt;')
@@ -207,7 +194,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS para widget embutível CONFORME PDF
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -216,7 +202,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Endpoints HTTP CONFORME PDF
 @app.get("/")
 async def root():
     return {
@@ -294,7 +279,6 @@ async def mock_login(login_data: LoginRequest):
         "type": "guest"
     }
 
-# WebSocket endpoint CONFORME PDF - VERSÃO DEFINITIVA
 @app.websocket("/ws")
 async def websocket_endpoint(
     websocket: WebSocket,
@@ -303,14 +287,11 @@ async def websocket_endpoint(
     user_name: str = "Guest",
     token: str = "guest"
 ):
-    """WebSocket CONFORME PDF - Versão corrigida sem loop infinito"""
     
-    # Sanitizar inputs CONFORME PDF
     room = re.sub(r'[^a-zA-Z0-9_-]', '', room)[:50]
     user_id = re.sub(r'[^a-zA-Z0-9_-]', '', user_id)[:50]
     user_name = user_name.strip()[:50]
     
-    # ✅ VALIDAÇÃO DE AUTENTICAÇÃO CONFORME PDF
     if token == "guest":
         logger.info(f"👤 Usuário convidado conectando: {user_name}")
     else:
@@ -323,16 +304,13 @@ async def websocket_endpoint(
     
     user_data = User(id=user_id, name=user_name)
     
-    # CONECTAR
     await connection_manager.connect(websocket, user_id, user_name, room)
     
     try:
-        # ✅ Enviar histórico (últimas 50 mensagens) CONFORME PDF
         history = await storage_manager.get_history(room)
         for message in history[-50:]:
             await connection_manager.send_personal_message(message, user_id)
         
-        # ✅ Mensagem de entrada CONFORME PDF
         system_message = {
             "type": "system",
             "room": room,
@@ -351,7 +329,6 @@ async def websocket_endpoint(
         
         logger.info(f"✅ {user_name} conectou à sala {room} (ID: {user_id})")
         
-        # ✅ Loop principal de mensagens CONFORME PDF
         while True:
             data = await websocket.receive_text()
             
@@ -359,8 +336,7 @@ async def websocket_endpoint(
                 message_data = json.loads(data)
                 message = WebSocketMessage(**message_data)
                 
-                # ✅ Validações de segurança CONFORME PDF
-                if message.content and len(message.content) > 1000:  # CONFORME PDF
+                if message.content and len(message.content) > 1000:
                     error_msg = {
                         "type": "error",
                         "room": room,
@@ -373,11 +349,9 @@ async def websocket_endpoint(
                     await connection_manager.send_personal_message(error_msg, user_id)
                     continue
                 
-                # ✅ Sanitização XSS CONFORME PDF
                 if message.content:
                     message.content = sanitize_content(message.content)
                 
-                # ✅ Rate limiting CONFORME PDF
                 if message.type == "message":
                     if not await storage_manager.check_rate_limit(user_id, room):
                         rate_info = await storage_manager.get_rate_limit_info(user_id, room)
@@ -396,7 +370,6 @@ async def websocket_endpoint(
                         await connection_manager.send_personal_message(error_msg, user_id)
                         continue
                 
-                # ✅ Processar tipos de mensagem CONFORME PDF
                 if message.type == "message":
                     await storage_manager.add_to_history(room, message.dict())
                     await connection_manager.broadcast_to_room(message.dict(), room)
@@ -476,10 +449,8 @@ async def websocket_endpoint(
     except Exception as e:
         logger.error(f"❌ Erro inesperado no WebSocket: {e}")
     finally:
-        # ✅ Limpeza final
         await connection_manager.disconnect(user_id, room)
         
-        # ✅ Mensagem de saída CONFORME PDF
         system_message = {
             "type": "system",
             "room": room,

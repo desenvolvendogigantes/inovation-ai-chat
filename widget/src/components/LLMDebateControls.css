@@ -36,7 +36,6 @@
   line-height: 1.4;
 }
 
-/* Configuração do Debate */
 .debate-config {
   display: flex;
   flex-direction: column;
@@ -117,7 +116,6 @@
   margin-top: 2px;
 }
 
-/* Seleção de Agentes */
 .agents-selection {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -154,7 +152,6 @@
   font-style: italic;
 }
 
-/* Configurações do Debate */
 .debate-settings {
   display: flex;
   gap: 16px;
@@ -169,7 +166,6 @@
   width: 100%;
 }
 
-/* Botão Iniciar Debate */
 .start-debate-button {
   background: linear-gradient(135deg, #8b5cf6, #3b82f6);
   color: white;
@@ -216,7 +212,6 @@
   opacity: 0.9;
 }
 
-/* Mensagem de Aviso */
 .warning-message {
   background: #fef3c7;
   border: 1px solid #fbbf24;
@@ -234,7 +229,6 @@
   color: #fbbf24;
 }
 
-/* Debate Ativo */
 .active-debate {
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
@@ -316,7 +310,6 @@
   color: #f1f5f9;
 }
 
-/* Informações do Debate */
 .debate-info {
   margin-top: 16px;
   padding-top: 16px;
@@ -356,7 +349,6 @@
   color: #94a3b8;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .llm-debate-controls {
     padding: 16px;
@@ -394,7 +386,6 @@
   }
 }
 
-/* Animações */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -410,7 +401,6 @@
   animation: slideIn 0.3s ease-out;
 }
 
-/* Estados de foco para acessibilidade */
 .form-group textarea:focus-visible,
 .form-group select:focus-visible,
 .form-group input:focus-visible,
@@ -420,7 +410,6 @@
   outline-offset: 2px;
 }
 
-/* Alto contraste */
 @media (prefers-contrast: high) {
   .llm-debate-controls {
     border: 1px solid;
@@ -441,7 +430,6 @@
   }
 }
 
-/* Reduzir movimento */
 @media (prefers-reduced-motion: reduce) {
   .llm-debate-controls {
     animation: none;

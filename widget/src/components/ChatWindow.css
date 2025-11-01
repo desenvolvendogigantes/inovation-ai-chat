@@ -1,4 +1,3 @@
-/* src/components/ChatWindow.css */
 .chat-window {
   position: fixed;
   bottom: 100px;
@@ -57,7 +56,6 @@
   background: #1a1a1a;
 }
 
-/* Header */
 .chat-header {
   background: white;
   border-bottom: 1px solid #f1f5f9;
@@ -195,7 +193,6 @@
   transform: rotate(180deg);
 }
 
-/* Botões de controle */
 .llm-controls-btn,
 .minimize-btn,
 .maximize-btn,
@@ -258,7 +255,6 @@
   animation: pulse 2s infinite;
 }
 
-/* Debate Status Bar */
 .debate-status-bar {
   background: linear-gradient(135deg, #fef3c7, #fef7cd);
   border-bottom: 1px solid #fbbf24;
@@ -312,7 +308,6 @@
   color: #fbbf24;
 }
 
-/* Room Selector Dropdown */
 .rooms-dropdown {
   position: absolute;
   top: 100%;
@@ -455,7 +450,6 @@
   flex-shrink: 0;
 }
 
-/* Área de Mensagens */
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -632,7 +626,6 @@
   border-color: #166534;
 }
 
-/* Mensagens do sistema e erro */
 .system-message,
 .error-message {
   width: 100%;
@@ -677,7 +670,6 @@
   border-color: #842029;
 }
 
-/* Indicador de digitação */
 .typing-indicator {
   display: flex;
   align-items: center;
@@ -730,7 +722,6 @@
   color: #94a3b8;
 }
 
-/* Seção LLM */
 .llm-debate-section {
   border-top: 1px solid #f1f5f9;
   background: white;
@@ -743,7 +734,6 @@
   border-color: #374151;
 }
 
-/* Input Area */
 .input-container {
   padding: 16px 20px;
   border-top: 1px solid #f1f5f9;
@@ -847,7 +837,6 @@
   flex-shrink: 0;
 }
 
-/* Screen reader only */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -860,7 +849,6 @@
   border: 0;
 }
 
-/* Scrollbar personalizada */
 .messages-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -899,7 +887,6 @@
   background: #4b5563;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .chat-window {
     width: calc(100vw - 32px);
@@ -932,7 +919,6 @@
   }
 }
 
-/* Acessibilidade - reduzir movimento */
 @media (prefers-reduced-motion: reduce) {
   .chat-window {
     animation: none;
@@ -964,7 +950,6 @@
   }
 }
 
-/* Alto contraste */
 @media (prefers-contrast: high) {
   .chat-window {
     border: 2px solid;

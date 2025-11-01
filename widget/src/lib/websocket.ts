@@ -252,7 +252,6 @@ export class WebSocketManager {
   }
 }
 
-// Hook React CORRIGIDO — usa singleton com useRef
 export const useWebSocket = (
   config: ChatConfig,
   eventHandlers: WebSocketEventHandlers
@@ -260,22 +259,17 @@ export const useWebSocket = (
   const managerRef = useRef<WebSocketManager | null>(null);
 
   useEffect(() => {
-    // Cria apenas uma vez
     if (!managerRef.current) {
       managerRef.current = new WebSocketManager(config, eventHandlers);
       managerRef.current.connect('guest');
     } else {
-      // Atualiza config se mudou
       managerRef.current['config'] = config;
     }
 
     return () => {
-      // NÃO desconecta aqui — só no unmount do widget
-      // managerRef.current?.disconnect();
     };
-  }, [config]); // NÃO inclui eventHandlers
+  }, [config]);
 
-  // Atualiza handlers se mudarem (raro com useCallback)
   useEffect(() => {
     if (managerRef.current) {
       managerRef.current['eventHandlers'] = eventHandlers;

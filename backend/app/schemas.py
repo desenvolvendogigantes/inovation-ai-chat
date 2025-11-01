@@ -4,7 +4,6 @@ import re
 
 
 class User(BaseModel):
-    """User model representing a chat participant."""
     
     id: str
     name: str = Field(..., min_length=1, max_length=50, description="User display name")
@@ -12,7 +11,6 @@ class User(BaseModel):
 
 
 class ChatMessage(BaseModel):
-    """Chat message model with validation for real-time communication."""
     
     type: str = Field(
         ..., 
@@ -28,7 +26,7 @@ class ChatMessage(BaseModel):
     code: Optional[str] = Field(None, description="Error code for type=error messages")
 
     @validator('content')
-    def validate_content_length(cls, value: Optional[str]) -> Optional[str]:  # pylint: disable=no-self-argument
+    def validate_content_length(cls, value: Optional[str]) -> Optional[str]:
         """
         Validate that message content does not exceed maximum length.
         
@@ -46,7 +44,7 @@ class ChatMessage(BaseModel):
         return value
 
     @validator('room')
-    def validate_room_name(cls, value: str) -> str:  # pylint: disable=no-self-argument
+    def validate_room_name(cls, value: str) -> str:
         """
         Validate room name format.
         
@@ -66,7 +64,6 @@ class ChatMessage(BaseModel):
 
 
 class LLMAgent(BaseModel):
-    """LLM agent configuration model."""
     
     id: str = Field(..., description="Unique agent identifier")
     name: str = Field(..., description="Display name for the agent")
@@ -91,7 +88,6 @@ class LLMAgent(BaseModel):
 
 
 class DebateSession(BaseModel):
-    """LLM debate session model."""
     
     id: str = Field(..., description="Unique session identifier")
     room: str = Field(..., description="Chat room where debate occurs")
@@ -124,7 +120,6 @@ class DebateSession(BaseModel):
 
 
 class RateLimitConfig(BaseModel):
-    """Rate limiting configuration model."""
     
     requests: int = Field(
         default=5,

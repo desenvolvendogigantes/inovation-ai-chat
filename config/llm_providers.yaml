@@ -1,9 +1,4 @@
-# config/llm_providers.yaml
-# Configuração de Agentes LLM para o Sistema de Debate
-# Estrutura conforme especificado no PDF
-
 agents:
-  # Agente A - Pode ser OpenAI
   gpt-4o:
     id: "gpt-4o"
     name: "GPT-4o"
@@ -14,7 +9,6 @@ agents:
     system_prompt: "You are a helpful and knowledgeable AI assistant. Provide clear, concise responses and engage in meaningful debate."
     api_key: "${OPENAI_API_KEY}"
 
-  # Agente B - Pode ser Gemini (diferente do Agente A conforme PDF)
   gemini-1.5:
     id: "gemini-1.5" 
     name: "Gemini 1.5 Pro"
@@ -25,7 +19,6 @@ agents:
     system_prompt: "You are a creative and insightful AI assistant. Offer unique perspectives and creative solutions in debates."
     api_key: "${GEMINI_API_KEY}"
 
-  # Agente Claude (mencionado no PDF como opção)
   claude-3-sonnet:
     id: "claude-3-sonnet"
     name: "Claude 3 Sonnet"
@@ -36,7 +29,6 @@ agents:
     system_prompt: "You are a thoughtful and articulate AI assistant. Provide well-reasoned arguments and maintain coherent discourse."
     api_key: "${ANTHROPIC_API_KEY}"
 
-  # Agentes Mock para quando não há chaves (OBRIGATÓRIO no PDF)
   mock-a:
     id: "mock-a"
     name: "Mock Agent A"
@@ -57,7 +49,6 @@ agents:
     system_prompt: "You are Mock Agent B. Always respond with analytical insights and critical thinking. Provide logical arguments and counter-points."
     api_key: ""
 
-# Configurações padrão para debates
 debate_settings:
   max_rounds: 6
   max_duration: 90
@@ -65,7 +56,6 @@ debate_settings:
   default_temperature: 0.7
   default_max_tokens: 500
 
-# Provedores configurados (para referência)
 providers:
   openai:
     base_url: "https://api.openai.com/v1"

@@ -22,7 +22,6 @@ class LLMProvider:
             genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
     
     async def generate_response(self, agent: LLMAgent, message: str, conversation_history: list) -> LLMResponse:
-        """Gera resposta usando o provedor específico do agente"""
         
         if agent.provider == "openai" and self.openai_client:
             return await self._openai_generate(agent, message, conversation_history)
@@ -38,7 +37,7 @@ class LLMProvider:
             ]
             
             # Adicionar histórico da conversa
-            for msg in conversation_history[-6:]:  # Últimas 6 mensagens para contexto
+            for msg in conversation_history[-6:]:
                 role = "assistant" if msg.get("is_agent") else "user"
                 messages.append({"role": role, "content": msg.get("content", "")})
             
@@ -84,7 +83,7 @@ class LLMProvider:
             
             return LLMResponse(
                 content=response.text,
-                tokens_used=0,  # Gemini não retorna contagem de tokens facilmente
+                tokens_used=0,
                 success=True
             )
             

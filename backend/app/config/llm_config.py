@@ -5,21 +5,18 @@ from pathlib import Path
 from .settings import settings
 
 class LLMConfig:
-    """Carregador de configuração LLM from YAML"""
     
     def __init__(self):
         self.config_path = Path(__file__).parent / "llm_providers.yaml"
         self.config = self._load_config()
     
     def _load_config(self) -> Dict[str, Any]:
-        """Carregar configuração do YAML"""
         if not self.config_path.exists():
             return self._get_default_config()
         
         with open(self.config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
         
-        # Expandir variáveis de ambiente
         self._expand_env_vars(config)
         return config
     
@@ -43,7 +40,6 @@ class LLMConfig:
                     provider_config['base_url'] = os.getenv(env_var, default)
     
     def _get_default_config(self) -> Dict[str, Any]:
-        """Configuração padrão se YAML não existir"""
         return {
             'agents': {
                 'mock-a': {
@@ -75,15 +71,12 @@ class LLMConfig:
         }
     
     def get_agents(self) -> Dict[str, Dict[str, Any]]:
-        """Obter todos os agentes configurados"""
         return self.config.get('agents', {})
     
     def get_agent(self, agent_id: str) -> Dict[str, Any]:
-        """Obter configuração de um agente específico"""
         return self.config.get('agents', {}).get(agent_id, {})
     
     def get_available_agents(self) -> List[Dict[str, Any]]:
-        """Obter lista de agentes disponíveis para a UI"""
         agents = []
         for agent_id, agent_config in self.get_agents().items():
             agents.append({
@@ -96,23 +89,19 @@ class LLMConfig:
         return agents
     
     def _is_agent_available(self, agent_config: Dict[str, Any]) -> bool:
-        """Verificar se agente está disponível (tem chave API ou é mock)"""
         if agent_config['provider'] == 'mock':
             return True
         
         provider_config = self.config.get('providers', {}).get(agent_config['provider'], {})
         api_key = provider_config.get('api_key', '')
         
-        # Se não requer API key ou se tem API key configurada
         return not provider_config.get('required', False) or bool(api_key)
     
     def get_debate_settings(self) -> Dict[str, Any]:
-        """Obter configurações padrão de debate"""
         return self.config.get('debate_settings', {
             'max_rounds': 6,
             'max_duration': 90,
             'turn_timeout': 15
         })
 
-# Instância global
 llm_config = LLMConfig()

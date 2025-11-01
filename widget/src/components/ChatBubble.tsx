@@ -25,9 +25,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
     onMessage: (message: ChatMessage) => {
       setMessages(prev => [...prev, message])
       
-      // Incrementar contador de não lidas apenas se:
-      // - A mensagem não for do próprio usuário
-      // - O chat não estiver aberto OU estiver minimizado
       if (message.user.id !== config.user.id && (!isOpen || isMinimized)) {
         setUnreadCount(prev => prev + 1)
       }
@@ -104,14 +101,11 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
 
   const handleOpenChat = () => {
     if (isMinimized) {
-      // Se estiver minimizado, maximizar
       setIsMinimized(false)
     } else if (!isOpen) {
-      // Se estiver fechado, abrir
       setIsOpen(true)
-      setUnreadCount(0) // Resetar contador ao abrir
+      setUnreadCount(0)
     } else {
-      // Se estiver aberto, minimizar
       setIsMinimized(true)
     }
   }
@@ -164,7 +158,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
     }
   }
 
-  // Navegação por teclado no botão do chat
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
@@ -181,7 +174,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
     }
   }
 
-  // Focar no botão quando o chat for fechado
   useEffect(() => {
     if (!isOpen && !isMinimized && chatBubbleRef.current) {
       chatBubbleRef.current.focus()
@@ -236,7 +228,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
         }
       >
         <div className="chat-bubble-inner">
-          {/* Ícone dinâmico baseado no estado */}
           {isOpen && !isMinimized ? (
             <svg className="chat-icon minimize-icon" viewBox="0 0 24 24" fill="none">
               <path 

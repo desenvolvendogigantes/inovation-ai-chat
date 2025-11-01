@@ -3,15 +3,13 @@ export interface User {
   name: string;
   avatar?: string | null;
 }
-
-// ChatMessage com campos opcionais para flexibilidade
 export interface ChatMessage {
   type: 'message' | 'presence' | 'typing' | 'system' | 'error';
   room: string;
   user: User;
   content: string | null;
   ts: number;
-  client_id?: string | null; // ✅ Tornado opcional
+  client_id?: string | null;
   meta?: Record<string, any>;
   code?: string;
 }
