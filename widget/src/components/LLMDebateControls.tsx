@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './LLMDebateControls.css';
 
 interface LLMDebateControlsProps {
-  roomId: string;
   onStartDebate: (topic: string, agentA: string, agentB: string) => void;
   onStopDebate: () => void;
   isDebateActive: boolean;
@@ -10,7 +9,6 @@ interface LLMDebateControlsProps {
 }
 
 const LLMDebateControls: React.FC<LLMDebateControlsProps> = ({
-  roomId,
   onStartDebate,
   onStopDebate,
   isDebateActive,

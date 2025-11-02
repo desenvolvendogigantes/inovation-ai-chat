@@ -3,9 +3,7 @@ import {
   ChatConfig, 
   WebSocketEventHandlers, 
   ConnectionStatus,
-  DebateConfig,
-  LLMDebateInfo,
-  User 
+  LLMDebateInfo
 } from '../types';
 import { useEffect, useRef } from 'react';
 
@@ -49,7 +47,7 @@ export class WebSocketManager {
       this.ws.onopen = () => this.handleOpen();
       this.ws.onmessage = (event) => this.handleMessage(event);
       this.ws.onclose = (event) => this.handleClose(event);
-      this.ws.onerror = (error) => this.handleError(error);
+      this.ws.onerror = () => this.handleError();
 
     } catch (error) {
       console.error('WebSocket connection error:', error);
@@ -324,7 +322,7 @@ export class WebSocketManager {
     }
   }
 
-  private handleError(error: Event): void {
+  private handleError(): void {
     this.eventHandlers.onError?.('Erro de conexão com o servidor', 'connection_error');
   }
 

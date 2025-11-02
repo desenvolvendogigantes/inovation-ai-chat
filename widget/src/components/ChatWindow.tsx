@@ -76,7 +76,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const saved = localStorage.getItem(`chat_messages_${config.roomId}`);
     if (saved) {
       try {
-        const parsedMessages = JSON.parse(saved);
+        // Mensagens carregadas do localStorage
+        JSON.parse(saved);
       } catch (error) {
         console.error('Erro ao carregar mensagens do localStorage:', error);
       }
@@ -479,7 +480,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       {showLLMControls && (
         <div className="llm-debate-section">
           <LLMDebateControls
-            roomId={config.roomId}
             onStartDebate={onStartDebate}
             onStopDebate={onStopDebate}
             isDebateActive={debateStatus.isActive}
@@ -521,9 +521,5 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     </div>
   );
 };
-
-const SrOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="sr-only">{children}</div>
-);
 
 export default ChatWindow;

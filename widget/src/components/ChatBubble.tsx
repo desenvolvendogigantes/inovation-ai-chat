@@ -4,7 +4,7 @@ import { useWebSocket } from '../lib/WebSocketManager'
 import { ChatConfig, ChatMessage, User, DebateStatus } from '../types'
 import './ChatBubble.css'
 
-interface ChatBubbleProps {
+export interface ChatBubbleProps {
   config: ChatConfig
 }
 
@@ -14,7 +14,6 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
   const [unreadCount, setUnreadCount] = useState(0)
   const [selectedRoom, setSelectedRoom] = useState(config.roomId)
   const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [onlineUsers, setOnlineUsers] = useState<User[]>([])
   const [onlineCount, setOnlineCount] = useState(0)
   const [typingUsers, setTypingUsers] = useState<User[]>([])
   const [debateStatus, setDebateStatus] = useState<DebateStatus>({ isActive: false })
@@ -30,8 +29,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
       }
     },
     
-    onPresenceUpdate: (users: User[], count: number) => {
-      setOnlineUsers(users)
+    onPresenceUpdate: (_users: User[], count: number) => {
       setOnlineCount(count)
     },
     
@@ -91,7 +89,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ config }) => {
       setDebateStatus({ isActive: false })
     },
     
-    onLLMDebateUpdate: (round, currentAgent) => {
+    onLLMDebateUpdate: (round) => {
       setDebateStatus(prev => ({
         ...prev,
         currentRound: round
