@@ -26,6 +26,6 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser && chown -R appuser:app
 USER appuser
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
+    CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["sh", "-c", "exec python -c \"import os; import uvicorn; port = int(os.getenv('PORT', 8000)); uvicorn.run('app.main:app', host='0.0.0.0', port=port, reload=False)\""]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
