@@ -1,8 +1,9 @@
 [build]
-builder = "NIXPACKS"
+builder = "DOCKERFILE"
+dockerfilePath = "./Dockerfile"
 
 [deploy]
-startCommand = "./start.sh"
+startCommand = "python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 
 [[services]]
 name = "web"
@@ -14,4 +15,5 @@ GEMINI_API_KEY = "${GEMINI_API_KEY}"
 OLLAMA_BASE_URL = "${OLLAMA_BASE_URL}"
 REDIS_URL = "${REDIS_URL}"
 ENVIRONMENT = "production"
-ALLOWED_ORIGINS = "https://your-app.railway.app,http://localhost:5173"
+ALLOWED_ORIGINS = "https://*.railway.app,http://localhost:5173,http://localhost:3000"
+PORT = "8000"
