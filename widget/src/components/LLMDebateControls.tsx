@@ -15,17 +15,17 @@ const LLMDebateControls: React.FC<LLMDebateControlsProps> = ({
   currentTopic
 }) => {
   const [topic, setTopic] = useState('');
-  const [agentA, setAgentA] = useState('gpt-4');
-  const [agentB, setAgentB] = useState('gemini-pro');
+  const [agentA, setAgentA] = useState('gpt-4o'); // ✅ CORRIGIDO
+  const [agentB, setAgentB] = useState('gemini-1.5'); // ✅ CORRIGIDO
   const [maxRounds, setMaxRounds] = useState(6);
 
+  // ✅ LISTA CORRIGIDA - IDs que existem no backend
   const agents = [
-    { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI', description: 'Modelo avançado da OpenAI' },
-    { id: 'gpt-3.5', name: 'GPT-3.5 Turbo', provider: 'OpenAI', description: 'Modelo rápido e eficiente' },
-    { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', description: 'Modelo multimodal do Google' },
-    { id: 'claude-2', name: 'Claude 2', provider: 'Anthropic', description: 'Modelo focado em segurança' },
-    { id: 'llama-2', name: 'Llama 2', provider: 'Meta', description: 'Modelo open-source' },
-    { id: 'mock-agent', name: 'Agente Mock', provider: 'Mock', description: 'Para testes sem API keys' }
+    { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', description: 'Modelo mais avançado da OpenAI' },
+    { id: 'gemini-1.5', name: 'Gemini 1.5 Pro', provider: 'Google', description: 'Modelo multimodal mais recente do Google' },
+    { id: 'claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic', description: 'Modelo balanceado da Anthropic' },
+    { id: 'mock-a', name: 'Mock Agent A', provider: 'Mock', description: 'Agente simulado para testes criativos' },
+    { id: 'mock-b', name: 'Mock Agent B', provider: 'Mock', description: 'Agente simulado para testes analíticos' }
   ];
 
   const handleStartDebate = () => {

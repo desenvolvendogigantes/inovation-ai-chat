@@ -151,7 +151,7 @@ class ConnectionManager:
         typing_message = {
             "type": "typing",
             "room": room_id,
-            "user": user_data,
+            "user": user_data.dict(),  # ✅ CORREÇÃO: Converter User para dict
             "content": "started" if typing_users else "stopped",
             "ts": int(datetime.now().timestamp() * 1000),
             "client_id": None,
@@ -371,8 +371,12 @@ async def websocket_endpoint(
                         continue
                 
                 if message.type == "message":
-                    await storage_manager.add_to_history(room, message.dict())
-                    await connection_manager.broadcast_to_room(message.dict(), room)
+                    # ✅ CORREÇÃO: Converter User para dict antes de serializar
+                    message_dict = message.dict()
+                    message_dict['user'] = message.user.dict()
+                    
+                    await storage_manager.add_to_history(room, message_dict)
+                    await connection_manager.broadcast_to_room(message_dict, room)
                     
                 elif message.type == "typing":
                     if message.content == "started":

@@ -62,10 +62,11 @@ class LLMOrchestrator:
 
     def _load_agents_from_config(self) -> Dict[str, Any]:
         agents = {}
-        yaml_agents = llm_config.get_agents()
+        available_agents = llm_config.get_available_agents()  # ✅ CORREÇÃO: usar get_available_agents()
         
-        for agent_id, agent_config in yaml_agents.items():
+        for agent_config in available_agents:
             try:
+                agent_id = agent_config['id']
                 agents[agent_id] = {
                     "id": agent_id,
                     "name": agent_config['name'],
@@ -78,27 +79,40 @@ class LLMOrchestrator:
                 }
                 logger.info(f"✅ Agente carregado: {agent_config['name']} ({agent_config['provider']})")
             except Exception as e:
-                logger.error(f"❌ Erro ao carregar agente {agent_id}: {e}")
+                logger.error(f"❌ Erro ao carregar agente {agent_config.get('id', 'unknown')}: {e}")
         
-        # Garantir agentes mock
-        if 'mock-a' not in agents:
+        # ✅ CORREÇÃO: Garantir que os agentes mock estão carregados
+        if not agents:
+            logger.warning("⚠️ Nenhum agente carregado do config, usando agentes mock padrão")
             agents['mock-a'] = {
                 "id": "mock-a",
                 "name": "Mock Agent A",
                 "provider": "mock",
                 "model": "mock",
+                "temperature": 0.7,
+                "max_tokens": 500,
                 "system_prompt": "You are Mock Agent A. Always respond with creative ideas."
             }
-        if 'mock-b' not in agents:
             agents['mock-b'] = {
                 "id": "mock-b", 
                 "name": "Mock Agent B",
                 "provider": "mock",
-                "model": "mock", 
+                "model": "mock",
+                "temperature": 0.7,
+                "max_tokens": 500,
                 "system_prompt": "You are Mock Agent B. Always respond with analytical insights."
             }
         
+        logger.info(f"📊 Total de agentes carregados: {len(agents)}")
         return agents
+
+    def get_agent(self, agent_id: str) -> Optional[Dict[str, Any]]:
+        """✅ MÉTODO ADICIONADO: Busca agente pelo ID"""
+        agent = self.agents.get(agent_id)
+        if not agent:
+            logger.error(f"❌ Agente não encontrado: {agent_id}")
+            logger.error(f"📋 Agentes disponíveis: {list(self.agents.keys())}")
+        return agent
 
     async def call_llm(self, agent: Dict[str, Any], prompt: str, context: List[str] = None) -> Dict[str, Any]:
         start_time = datetime.now()
@@ -275,11 +289,21 @@ class LLMOrchestrator:
     async def start_debate(self, room_id: str, config: Dict[str, Any]) -> str:
         debate_id = str(uuid.uuid4())
         
-        agent_a = self.agents.get(config["agent_a_id"])
-        agent_b = self.agents.get(config["agent_b_id"])
+        # ✅ CORREÇÃO: Usar o método get_agent e logs detalhados
+        agent_a_id = config["agent_a_id"]
+        agent_b_id = config["agent_b_id"]
         
-        if not agent_a or not agent_b:
-            raise ValueError("Agente não encontrado")
+        logger.info(f"🔍 Buscando agente A: {agent_a_id}")
+        logger.info(f"🔍 Buscando agente B: {agent_b_id}")
+        logger.info(f"📋 Agentes disponíveis: {list(self.agents.keys())}")
+        
+        agent_a = self.get_agent(agent_a_id)
+        agent_b = self.get_agent(agent_b_id)
+        
+        if not agent_a:
+            raise ValueError(f"Agente A não encontrado: {agent_a_id}")
+        if not agent_b:
+            raise ValueError(f"Agente B não encontrado: {agent_b_id}")
         
         debate_settings = llm_config.get_debate_settings()
         max_rounds = config.get("max_rounds", debate_settings.get('max_rounds', 6))
