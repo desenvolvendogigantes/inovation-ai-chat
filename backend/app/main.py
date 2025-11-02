@@ -151,7 +151,7 @@ class ConnectionManager:
         typing_message = {
             "type": "typing",
             "room": room_id,
-            "user": user_data.dict(),  # ✅ CORREÇÃO: Converter User para dict
+            "user": user_data.dict(),
             "content": "started" if typing_users else "stopped",
             "ts": int(datetime.now().timestamp() * 1000),
             "client_id": None,
@@ -189,7 +189,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Inovation AI Chat API",
-    description="Chat em tempo real com WebSocket e orquestração LLM - CONFORME PDF",
+    description="Chat em tempo real com WebSocket e orquestração LLM",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -371,7 +371,6 @@ async def websocket_endpoint(
                         continue
                 
                 if message.type == "message":
-                    # ✅ CORREÇÃO: Converter User para dict antes de serializar
                     message_dict = message.dict()
                     message_dict['user'] = message.user.dict()
                     
