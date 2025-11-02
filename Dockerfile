@@ -28,4 +28,4 @@ USER appuser
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD python -c "import os; port = int(os.getenv('PORT', '8000')); import uvicorn; print(f'🚀 Starting FastAPI on port {port}'); uvicorn.run('app.main:app', host='0.0.0.0', port=port)"
