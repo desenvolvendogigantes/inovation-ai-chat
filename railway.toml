@@ -10,10 +10,7 @@ name = "web"
 httpPort = 8000
 
 [services.env]
-OPENAI_API_KEY = "${OPENAI_API_KEY}"
-GEMINI_API_KEY = "${GEMINI_API_KEY}" 
-OLLAMA_BASE_URL = "${OLLAMA_BASE_URL}"
-REDIS_URL = "${REDIS_URL}"
-ENVIRONMENT = "production"
-ALLOWED_ORIGINS = "https://*.railway.app,http://localhost:5173,http://localhost:3000"
 PORT = "8000"
+REDIS_URL = "${REDIS_URL}"
+OPENAI_API_KEY = "${OPENAI_API_KEY}"
+GEMINI_API_KEY = "${GEMINI_API_KEY}"
