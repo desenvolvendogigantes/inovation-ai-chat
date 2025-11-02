@@ -1,0 +1,17 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "./start.sh"
+
+[[services]]
+name = "web"
+httpPort = 8000
+
+[services.env]
+OPENAI_API_KEY = "${OPENAI_API_KEY}"
+GEMINI_API_KEY = "${GEMINI_API_KEY}" 
+OLLAMA_BASE_URL = "${OLLAMA_BASE_URL}"
+REDIS_URL = "${REDIS_URL}"
+ENVIRONMENT = "production"
+ALLOWED_ORIGINS = "https://your-app.railway.app,http://localhost:5173"
