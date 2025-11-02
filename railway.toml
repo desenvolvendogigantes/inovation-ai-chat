@@ -3,7 +3,7 @@ builder = "DOCKERFILE"
 dockerfilePath = "./Dockerfile"
 
 [deploy]
-startCommand = "python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 
 [[services]]
 name = "web"
@@ -11,7 +11,16 @@ httpPort = 8000
 
 [services.env]
 PORT = "8000"
+ENVIRONMENT = "production"
+
 REDIS_URL = "${REDIS_URL}"
 OPENAI_API_KEY = "${OPENAI_API_KEY}"
-GEMINI_API_KEY = "${GEMINI_API_KEY}"
-ALLOWED_ORIGINS = "https://*.railway.app,http://localhost:5173"
+GEMINI_API_KEY = "${GEMINI_API_KEY}" 
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+OLLAMA_BASE_URL = "${OLLAMA_BASE_URL:-http://localhost:11434}"
+ALLOWED_ORIGINS = "https://inovation-ai-chat-production.up.railway.app,http://localhost:5173,https://inovation-ai-chat.vercel.app"
+RATE_LIMIT_REQUESTS = "5"
+RATE_LIMIT_WINDOW = "5"
+MAX_MESSAGE_LENGTH = "1000"
+MAX_HISTORY_SIZE = "50"
+HISTORY_TTL = "86400"
